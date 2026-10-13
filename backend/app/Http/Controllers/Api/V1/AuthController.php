@@ -78,7 +78,7 @@ class AuthController extends Controller
 
         return $this->successResponse(
             data: [
-                'user' => new UserResource($user),
+                'user' => new UserResource($user->load('role')),
                 'abilities' => $this->authService->allowedAbilities($user),
             ],
             message: 'User profile retrieved successfully.'

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\AbilityEnum;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +18,6 @@ use Illuminate\Validation\ValidationException;
  */
 class AuthService
 {
-    private const ABILITIES = [
-        'barang-masuk.manage',
-        'master-data.manage',
-        'users.manage',
-    ];
-
     /**
      * Authenticate user credentials, check account lock status, and start a session.
      *
@@ -74,7 +69,8 @@ class AuthService
      */
     public function allowedAbilities(User $user): array
     {
-        return collect(self::ABILITIES)
+        return collect(AbilityEnum::cases())
+            ->map(fn(AbilityEnum $ability) => $ability->value)
             ->filter(fn(string $ability) => Gate::forUser($user)->allows($ability))
             ->values()
             ->all();

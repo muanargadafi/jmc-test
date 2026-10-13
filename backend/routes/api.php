@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleNameEnum;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\HealthController;
@@ -49,44 +50,61 @@ Route::prefix('v1')->group(function () {
     | Protected routes
     |----------------------------------------------------------------
     */
-
     Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
-        Route::get('roles', [RoleController::class, 'index']);
-
-        Route::prefix('users')->controller(UserController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('/{user}', 'show');
-            Route::post('/', 'store');
-            Route::put('/{user}', 'update');
-            Route::patch('/{user}/toggle-lock', 'toggleLock');
-            Route::delete('/{user}', 'destroy');
+        Route::middleware('role:' . RoleNameEnum::ADMIN->value . ',' . RoleNameEnum::OPERATOR->value)->group(function () {
+            Route::get('categories/options', [CategoryController::class, 'options']);
+            Route::get('sub-categories/options', [SubCategoryController::class, 'options']);
         });
 
-        Route::prefix('categories')->controller(CategoryController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('options', 'options');
-            Route::get('/{category}', 'show');
-            Route::post('/', 'store');
-            Route::put('/{category}', 'update');
-            Route::delete('/{category}', 'destroy');
+        /*
+        |------------------------------------------------------------
+        | Admin only — Manajemen User & Master Data
+        |------------------------------------------------------------
+        */
+        Route::middleware('role:' . RoleNameEnum::ADMIN->value)->group(function () {
+            Route::get('roles', [RoleController::class, 'index']);
+
+            Route::prefix('users')->controller(UserController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::get('/{user}', 'show');
+                Route::post('/', 'store');
+                Route::put('/{user}', 'update');
+                Route::patch('/{user}/toggle-lock', 'toggleLock');
+                Route::delete('/{user}', 'destroy');
+            });
+
+            Route::prefix('categories')->controller(CategoryController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::get('/{category}', 'show');
+                Route::post('/', 'store');
+                Route::put('/{category}', 'update');
+                Route::delete('/{category}', 'destroy');
+            });
+
+            Route::prefix('sub-categories')->controller(SubCategoryController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::get('/{subCategory}', 'show');
+                Route::post('/', 'store');
+                Route::put('/{subCategory}', 'update');
+                Route::delete('/{subCategory}', 'destroy');
+            });
         });
 
-        Route::prefix('sub-categories')->controller(SubCategoryController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('options', 'options');
-            Route::get('/{subCategory}', 'show');
-            Route::post('/', 'store');
-            Route::put('/{subCategory}', 'update');
-            Route::delete('/{subCategory}', 'destroy');
-        });
-
-        Route::prefix('incoming-goods')->controller(IncomingGoodController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('/{incomingGood}', 'show');
-            Route::post('/', 'store');
-            Route::put('/{incomingGood}', 'update');
-            Route::patch('/{incomingGood}/verify', 'verify');
-            Route::delete('/{incomingGood}', 'destroy');
-        });
+        /*
+        |------------------------------------------------------------
+        | Admin & Operator — Incoming Good
+        |------------------------------------------------------------
+        */
+        Route::middleware('role:' . RoleNameEnum::ADMIN->value . ',' . RoleNameEnum::OPERATOR->value)
+            ->prefix('incoming-goods')
+            ->controller(IncomingGoodController::class)
+            ->group(function () {
+                Route::get('/', 'index');
+                Route::get('/{incomingGood}', 'show');
+                Route::post('/', 'store');
+                Route::put('/{incomingGood}', 'update');
+                Route::patch('/{incomingGood}/verify', 'verify');
+                Route::delete('/{incomingGood}', 'destroy');
+            });
     });
 });
