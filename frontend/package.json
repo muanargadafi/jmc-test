@@ -1,0 +1,36 @@
+{
+  "name": "frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "nuxt typecheck",
+    "format": "prettier --write \"app/**/*.{vue,ts}\" \"*.{js,ts,json}\"",
+    "format:check": "prettier --check \"app/**/*.{vue,ts}\" \"*.{js,ts,json}\""
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.136",
+    "@nuxt/image": "^2.1.0",
+    "@nuxt/ui": "^4.11.2",
+    "@tanstack/table-core": "^8.21.3",
+    "@vueuse/core": "^15.0.0",
+    "@vueuse/nuxt": "^15.0.0",
+    "@vueuse/router": "^15.0.0",
+    "nuxt": "^4.5.2",
+    "tailwindcss": "^4.3.3",
+    "vue": "^3.5.43",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.9"
+  },
+  "packageManager": "pnpm@12.11.2"
+}

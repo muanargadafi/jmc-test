@@ -51,9 +51,28 @@ Homestead.yaml
 /backend/.phpunit.result.cache
 /backend/auth.json
 
+# Nuxt / Node.js
+/frontend/node_modules/
+/frontend/.nuxt/
+/frontend/.output/
+/frontend/.data/
+/frontend/.nitro/
+/frontend/dist/
+/frontend/coverage/
+/frontend/.cache/
+
+# Package manager and build artifacts
+/frontend/.eslintcache
+/frontend/.stylelintcache
+/frontend/npm-debug.log*
+/frontend/pnpm-debug.log*
+/frontend/yarn-debug.log*
+
 # IDE settings inside project
 /backend/.idea/
+/frontend/.idea/
 /backend/.vscode/
+/frontend/.vscode/
 
 # Temporary files
 *.tmp
