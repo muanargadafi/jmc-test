@@ -1,0 +1,3 @@
+id,code,name,description
+1,admin,Admin,Administrator dengan akses penuh
+2,operator,Operator,Operator untuk mengelola data operasional
