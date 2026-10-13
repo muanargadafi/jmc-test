@@ -41,7 +41,6 @@ class StoreUserRequest extends FormRequest
                 'required',
                 'string',
                 new StrongPasswordRule(),
-                'confirmed'
             ],
             'name' => [
                 'required',

@@ -38,8 +38,8 @@ class UserController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = (int) $request->integer('per_page', 10);
-        $filters = $request->only(['search', 'role_id', 'status']);
+        $perPage = (int) $request->integer('limit', 10);
+        $filters = $request->only(['search', 'role_id']);
 
         $users = $this->userService->paginate($perPage, $filters);
 

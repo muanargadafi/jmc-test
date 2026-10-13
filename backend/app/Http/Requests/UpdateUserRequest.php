@@ -46,7 +46,6 @@ class UpdateUserRequest extends FormRequest
                 'nullable',
                 'string',
                 new StrongPasswordRule(),
-                'confirmed'
             ],
             'name' => [
                 'sometimes',
