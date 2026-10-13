@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
                 'name' => 'Super Admin',
                 'username' => 'admin',
                 'email_verified_at' => now(),
-                'password' => Hash::make(env('ADMIN_DEFAULT_PASSWORD', 'Admin@12345')),
+                'password' => Hash::make(env('ADMIN_DEFAULT_PASSWORD') ?: 'Admin@12345'),
             ]
         );
 

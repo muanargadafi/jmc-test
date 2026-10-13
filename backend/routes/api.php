@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -27,22 +28,36 @@ Route::prefix('health')->group(function () {
 Route::prefix('v1')->group(function () {
     /*
     |----------------------------------------------------------------
+    | Auth (public)
+    |----------------------------------------------------------------
+    */
+    Route::prefix('auth')->group(function () {
+        Route::post('login', [AuthController::class, 'login']);
+
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('logout', [AuthController::class, 'logout']);
+            Route::get('me', [AuthController::class, 'me']);
+        });
+    });
+
+    /*
+    |----------------------------------------------------------------
     | Protected routes
     |----------------------------------------------------------------
     */
 
-    // Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
-    Route::get('roles', [RoleController::class, 'index']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('roles', [RoleController::class, 'index']);
 
-    Route::prefix('users')->controller(UserController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::get('/{user}', 'show');
-        Route::post('/', 'store');
-        Route::put('/{user}', 'update');
-        Route::patch('/{user}/toggle-lock', 'toggleLock');
-        Route::delete('/{user}', 'destroy');
+        Route::prefix('users')->controller(UserController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('/{user}', 'show');
+            Route::post('/', 'store');
+            Route::put('/{user}', 'update');
+            Route::patch('/{user}/toggle-lock', 'toggleLock');
+            Route::delete('/{user}', 'destroy');
+        });
     });
-    // });
 });
 
 /*

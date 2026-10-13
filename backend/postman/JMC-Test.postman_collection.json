@@ -1,0 +1,582 @@
+{
+    "info": {
+        "_postman_id": "b1c2d3e4-0000-4000-8000-000000000001",
+        "name": "JMC Test API",
+        "description": "Postman collection for the JMC Test Laravel API.\n\nAuthentication is session-based (Laravel Sanctum stateful API). There is no bearer token issued by /auth/login. To authenticate:\n\n1. Run `Auth > Get CSRF Cookie` (primes the XSRF-TOKEN cookie).\n2. Run `Auth > Login` (session cookie is stored in Postman's cookie jar).\n3. Protected requests then reuse the session cookie automatically.\n\nThe collection pre-request script adds the required `Referer`/`Origin` headers (stateful domain detection) and, for mutating requests, the `X-XSRF-TOKEN` header. Set the `token` environment variable only if you manually issue a Sanctum personal access token.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "noauth"
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "const origin = pm.environment.get('stateful_origin') || pm.environment.get('base_url') || 'http://localhost:8000';",
+                    "pm.request.headers.upsert({ key: 'Referer', value: origin });",
+                    "pm.request.headers.upsert({ key: 'Origin', value: origin });",
+                    "if (!pm.request.headers.has('Accept')) {",
+                    "    pm.request.headers.upsert({ key: 'Accept', value: 'application/json' });",
+                    "}",
+                    "",
+                    "// Optional: manual Sanctum personal access token.",
+                    "const bearer = pm.environment.get('token');",
+                    "if (bearer) {",
+                    "    pm.request.headers.upsert({ key: 'Authorization', value: 'Bearer ' + bearer });",
+                    "}",
+                    "",
+                    "// CSRF token required for stateful mutating requests.",
+                    "const xsrf = pm.environment.get('xsrf_token');",
+                    "if (xsrf && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(pm.request.method)) {",
+                    "    pm.request.headers.upsert({ key: 'X-XSRF-TOKEN', value: xsrf });",
+                    "}"
+                ]
+            }
+        }
+    ],
+    "item": [
+        {
+            "name": "Get Sanctum CSRF Cookie",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const xsrf = pm.cookies.get('XSRF-TOKEN');",
+                            "if (xsrf) {",
+                            "    pm.environment.set('xsrf_token', decodeURIComponent(xsrf));",
+                            "    console.log('XSRF token stored.');",
+                            "} else {",
+                            "    console.warn('XSRF-TOKEN cookie not found. Check the CSRF endpoint and cookie domain.');",
+                            "}"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "auth": {
+                    "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/sanctum/csrf-cookie",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "sanctum",
+                        "csrf-cookie"
+                    ]
+                },
+                "description": "Built-in Laravel Sanctum CSRF cookie endpoint. Run this before any stateful mutating request (e.g. Login). The test script stores the XSRF-TOKEN cookie in the `xsrf_token` environment variable."
+            },
+            "response": []
+        },
+        {
+            "name": "Health",
+            "item": [
+                {
+                    "name": "Ready",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/health/ready",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "health",
+                                "ready"
+                            ]
+                        },
+                        "description": "Readiness probe. Checks the database and Redis. Returns 200 when healthy, 503 with status DEGRADED otherwise."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Ready (root)",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/health",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "health"
+                            ]
+                        },
+                        "description": "Alias of the readiness probe."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Live",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/health/live",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "health",
+                                "live"
+                            ]
+                        },
+                        "description": "Liveness probe. Returns 200 with the application uptime."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Get CSRF Cookie",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const xsrf = pm.cookies.get('XSRF-TOKEN');",
+                                    "if (xsrf) {",
+                                    "    pm.environment.set('xsrf_token', decodeURIComponent(xsrf));",
+                                    "    console.log('XSRF token stored.');",
+                                    "} else {",
+                                    "    console.warn('XSRF-TOKEN cookie not found. Check the CSRF endpoint and cookie domain.');",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/sanctum/csrf-cookie",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "sanctum",
+                                "csrf-cookie"
+                            ]
+                        },
+                        "description": "Sets the XSRF-TOKEN cookie. Run this before Login. The test script stores the token in the `xsrf_token` environment variable."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"Admin@12345\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Authenticates with username/password. Uses session-based auth (Sanctum stateful), so no bearer token is returned. The session cookie is stored automatically by Postman. Rate limited by `throttle:login`."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Me",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/auth/me",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "auth",
+                                "me"
+                            ]
+                        },
+                        "description": "Returns the currently authenticated user profile and allowed abilities. Requires an active session."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/auth/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "auth",
+                                "logout"
+                            ]
+                        },
+                        "description": "Invalidates the current session. Requires an active session."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Roles",
+            "item": [
+                {
+                    "name": "List Roles",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/roles",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "roles"
+                            ]
+                        },
+                        "description": "Returns the list of available roles."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "List Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/users?per_page=15&search=&status=&role_id=",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "users"
+                            ],
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Items per page (default 15)."
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "",
+                                    "description": "Free-text search filter."
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "",
+                                    "description": "Filter by user status."
+                                },
+                                {
+                                    "key": "role_id",
+                                    "value": "",
+                                    "description": "Filter by role ID."
+                                }
+                            ]
+                        },
+                        "description": "Returns a paginated list of users."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"role_id\": 1,\n    \"name\": \"John Doe\",\n    \"username\": \"johndoe\",\n    \"email\": \"johndoe@example.com\",\n    \"password\": \"Password@123\",\n    \"password_confirmation\": \"Password@123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "users"
+                            ]
+                        },
+                        "description": "Creates a new user. Password must be at least 8 characters and contain an uppercase letter, a lowercase letter, a number, and a special character, and must be confirmed."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/users/{{user_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "users",
+                                "{{user_id}}"
+                            ]
+                        },
+                        "description": "Returns a single user with role, creator, and updater loaded."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"role_id\": 1,\n    \"name\": \"John Doe Updated\",\n    \"username\": \"johndoe\",\n    \"email\": \"johndoe@example.com\",\n    \"password\": \"Password@123\",\n    \"password_confirmation\": \"Password@123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/users/{{user_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "users",
+                                "{{user_id}}"
+                            ]
+                        },
+                        "description": "Updates an existing user. All fields are optional. Password is only updated when provided."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Toggle User Lock",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/users/{{user_id}}/toggle-lock",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "users",
+                                "{{user_id}}",
+                                "toggle-lock"
+                            ]
+                        },
+                        "description": "Toggles the locked state of the given user."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{api_prefix}}/v1/users/{{user_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "{{api_prefix}}",
+                                "v1",
+                                "users",
+                                "{{user_id}}"
+                            ]
+                        },
+                        "description": "Deletes the given user."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "api_prefix",
+            "value": "api",
+            "type": "string"
+        },
+        {
+            "key": "stateful_origin",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "user_id",
+            "value": "1",
+            "type": "string"
+        }
+    ]
+}
