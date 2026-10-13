@@ -7,18 +7,18 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const items = [{ label: 'HOME', to: '/' }, { label: 'MANAJEMEN USER' }]
+const items = [{ label: 'HOME', to: '/' }, { label: 'USER MANAGEMENT' }]
 
 const { getUsers, createUser, updateUser, deleteUser, toggleLockUser } = useUsers()
 
-// --- roles untuk dropdown ---
+// --- roles for dropdown ---
 const roleList = [
   { id: 1, code: 'admin', nama: 'Admin' },
   { id: 2, code: 'operator', nama: 'Operator' },
 ]
 
 const roleOptions = [
-  { label: 'Semua Role', value: null },
+  { label: 'All Roles', value: null },
   ...roleList.map((r) => ({ label: r.nama, value: r.id })),
 ]
 
@@ -27,7 +27,7 @@ const formRoleOptions = roleList.map((r) => ({ label: r.nama, value: r.id }))
 // --- getUsers ---
 const { users, meta, loading, refresh, page, limit, search, roleId } = getUsers()
 
-// fix: null supaya tidak tampil 0 di USelect filter
+// fix: null so it doesn't show 0 in USelect filter
 const filterRoleId = computed({
   get: () => roleId.value || null,
   set: (val) => {
@@ -49,7 +49,7 @@ const columns = [
   },
   { id: 'action', header: 'Action' },
   { accessorKey: 'username', header: 'Username' },
-  { accessorKey: 'name', header: 'Nama' },
+  { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'email', header: 'Email' },
   {
     id: 'role',
@@ -103,7 +103,7 @@ function openEdit(row) {
   isOpen.value = true
 }
 
-// --- validasi ---
+// --- validation ---
 function validate() {
   const schema = isEdit.value ? updateUserSchema : createUserSchema
   const result = schema.safeParse({
@@ -142,10 +142,10 @@ async function handleSubmit() {
 
     if (isEdit.value) {
       await updateUser(editId.value, payload)
-      manager.successMessage = 'User berhasil diperbarui.'
+      manager.successMessage = 'User updated successfully.'
     } else {
       await createUser(payload)
-      manager.successMessage = 'User berhasil ditambahkan.'
+      manager.successMessage = 'User created successfully.'
     }
 
     isOpen.value = false
@@ -159,9 +159,9 @@ async function handleSubmit() {
         mapped[formKey] = Array.isArray(messages) ? messages[0] : messages
       }
       formErrors.value = mapped
-      manager.errorMessage = 'Periksa kembali isian form.'
+      manager.errorMessage = 'Please check the form fields.'
     } else {
-      manager.errorMessage = e?.data?.message || 'Terjadi kesalahan, coba lagi.'
+      manager.errorMessage = e?.data?.message || 'An error occurred, please try again.'
     }
   } finally {
     submitLoading.value = false
@@ -175,10 +175,10 @@ async function handleDelete(id) {
   deleteLoading.value = id
   try {
     await deleteUser(id)
-    manager.successMessage = 'User berhasil dihapus.'
+    manager.successMessage = 'User deleted successfully.'
     await refresh()
   } catch (e) {
-    manager.errorMessage = e?.data?.message || 'Gagal menghapus user.'
+    manager.errorMessage = e?.data?.message || 'Failed to delete user.'
   } finally {
     deleteLoading.value = null
   }
@@ -192,11 +192,11 @@ async function handleToggleLock(row) {
   try {
     await toggleLockUser(row.id)
     manager.successMessage = row.is_locked
-      ? 'User berhasil dibuka aksesnya.'
-      : 'User berhasil dikunci.'
+      ? 'User access unlocked successfully.'
+      : 'User locked successfully.'
     await refresh()
   } catch (e) {
-    manager.errorMessage = e?.data?.message || 'Gagal mengubah status kunci user.'
+    manager.errorMessage = e?.data?.message || 'Failed to change user lock status.'
   } finally {
     lockLoading.value = null
   }

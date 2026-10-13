@@ -2,13 +2,9 @@ import { z } from 'zod'
 import { requiredString } from './shared.schema'
 
 const strongPassword = (label) =>
-  z
-    .string()
-    .min(8, { message: `${label} must be at least 8 characters` })
-    .regex(/[A-Z]/, { message: `${label} must contain at least one uppercase letter` })
-    .regex(/[a-z]/, { message: `${label} must contain at least one lowercase letter` })
-    .regex(/[0-9]/, { message: `${label} must contain at least one number` })
-    .regex(/[^A-Za-z0-9]/, { message: `${label} must contain at least one special character` })
+  requiredString('Password').regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/, {
+    message: `${label} must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.`,
+  })
 
 export const createUserSchema = z.object({
   role_id: z.number({ error: 'Role is required' }).int().positive({ message: 'Role is required' }),
