@@ -49,11 +49,6 @@ class SubCategoryController extends Controller
         return $this->successResponse(
             data: SubCategoryResource::collection($subCategories->items()),
             meta: [
-                'current_page' => $subCategories->currentPage(),
-                'last_page' => $subCategories->lastPage(),
-                'per_page' => $subCategories->perPage(),
-                'total' => $subCategories->total(),
-
                 'page' => $subCategories->currentPage(),
                 'limit' => $subCategories->perPage(),
                 'totalItems' => $subCategories->total(),
