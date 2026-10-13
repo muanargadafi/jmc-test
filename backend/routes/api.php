@@ -30,7 +30,19 @@ Route::prefix('v1')->group(function () {
     | Protected routes
     |----------------------------------------------------------------
     */
+
+    // Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('roles', [RoleController::class, 'index']);
+
+    Route::prefix('users')->controller(UserController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{user}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{user}', 'update');
+        Route::patch('/{user}/toggle-lock', 'toggleLock');
+        Route::delete('/{user}', 'destroy');
+    });
+    // });
 });
 
 /*

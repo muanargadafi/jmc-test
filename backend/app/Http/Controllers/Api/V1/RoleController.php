@@ -29,7 +29,7 @@ class RoleController extends Controller
 
         return $this->successResponse(
             data: RoleResource::collection($roles),
-            message: 'Data role berhasil diambil.'
+            message: 'Role data retrieved successfully.'
         );
     }
 }
