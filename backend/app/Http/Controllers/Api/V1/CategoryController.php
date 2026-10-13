@@ -49,10 +49,10 @@ class CategoryController extends Controller
         return $this->successResponse(
             data: CategoryResource::collection($categories->items()),
             meta: [
-                'current_page' => $categories->currentPage(),
-                'last_page' => $categories->lastPage(),
-                'per_page' => $categories->perPage(),
-                'total' => $categories->total(),
+                'page' => $categories->currentPage(),
+                'limit' => $categories->perPage(),
+                'totalItems' => $categories->total(),
+                'totalPages' => $categories->lastPage(),
             ],
             message: 'Categories data retrieved successfully.'
         );

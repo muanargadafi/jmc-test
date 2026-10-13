@@ -53,10 +53,10 @@ class IncomingGoodController extends Controller
         return $this->successResponse(
             data: IncomingGoodResource::collection($incomingGoods->items()),
             meta: [
-                'current_page' => $incomingGoods->currentPage(),
-                'last_page' => $incomingGoods->lastPage(),
-                'per_page' => $incomingGoods->perPage(),
-                'total' => $incomingGoods->total(),
+                'page' => $incomingGoods->currentPage(),
+                'limit' => $incomingGoods->perPage(),
+                'totalItems' => $incomingGoods->total(),
+                'totalPages' => $incomingGoods->lastPage(),
             ],
             message: 'Incoming goods data retrieved successfully.'
         );

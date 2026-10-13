@@ -46,10 +46,10 @@ class UserController extends Controller
         return $this->successResponse(
             data: UserResource::collection($users->items()),
             meta: [
-                'current_page' => $users->currentPage(),
-                'last_page' => $users->lastPage(),
-                'per_page' => $users->perPage(),
-                'total' => $users->total(),
+                'page' => $users->currentPage(),
+                'limit' => $users->perPage(),
+                'totalItems' => $users->total(),
+                'totalPages' => $users->lastPage(),
             ],
             message: 'User data retrieved successfully.'
         );

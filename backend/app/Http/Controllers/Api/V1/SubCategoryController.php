@@ -53,6 +53,11 @@ class SubCategoryController extends Controller
                 'last_page' => $subCategories->lastPage(),
                 'per_page' => $subCategories->perPage(),
                 'total' => $subCategories->total(),
+
+                'page' => $subCategories->currentPage(),
+                'limit' => $subCategories->perPage(),
+                'totalItems' => $subCategories->total(),
+                'totalPages' => $subCategories->lastPage(),
             ],
             message: 'Sub Categories data retrieved successfully.'
         );
