@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\HealthController;
+use App\Http\Controllers\Api\V1\IncomingGoodController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SubCategoryController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -78,14 +79,14 @@ Route::prefix('v1')->group(function () {
             Route::put('/{subCategory}', 'update');
             Route::delete('/{subCategory}', 'destroy');
         });
-    });
-});
 
-/*
-|--------------------------------------------------------------------------
-| Fallback
-|--------------------------------------------------------------------------
-*/
-Route::fallback(function () {
-    return response()->json(['message' => 'Not Found'], 404);
+        Route::prefix('incoming-goods')->controller(IncomingGoodController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('/{incomingGood}', 'show');
+            Route::post('/', 'store');
+            Route::put('/{incomingGood}', 'update');
+            Route::patch('/{incomingGood}/verify', 'verify');
+            Route::delete('/{incomingGood}', 'destroy');
+        });
+    });
 });

@@ -30,6 +30,11 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\SubCategoryRepositoryInterface::class,
             \App\Repositories\Eloquents\SubCategoryRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Contracts\IncomingGoodRepositoryInterface::class,
+            \App\Repositories\Eloquents\IncomingGoodRepository::class
+        );
     }
 
     /**
