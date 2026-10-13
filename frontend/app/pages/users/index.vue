@@ -7,7 +7,7 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const items = [{ label: 'HOME', to: '/' }, { label: 'USER MANAGEMENT' }]
+const items = [{ label: 'HOME', to: '/' }, { label: 'MANAJEMEN USER' }]
 
 const { getUsers, createUser, updateUser, deleteUser, toggleLockUser } = useUsers()
 
