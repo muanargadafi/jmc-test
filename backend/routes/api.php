@@ -32,7 +32,8 @@ Route::prefix('v1')->group(function () {
     |----------------------------------------------------------------
     */
     Route::prefix('auth')->group(function () {
-        Route::post('login', [AuthController::class, 'login']);
+        Route::post('login', [AuthController::class, 'login'])
+            ->middleware('throttle:login');
 
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('logout', [AuthController::class, 'logout']);
@@ -46,7 +47,7 @@ Route::prefix('v1')->group(function () {
     |----------------------------------------------------------------
     */
 
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::get('roles', [RoleController::class, 'index']);
 
         Route::prefix('users')->controller(UserController::class)->group(function () {

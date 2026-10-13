@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -19,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+        $middleware->throttleWithRedis();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
@@ -66,15 +70,49 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // 500 - Internal Server Error
-        $exceptions->render(function (Throwable $e, Request $request) {
+        // 419 - CSRF token mismatch
+        $exceptions->render(function (TokenMismatchException $e, Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => app()->environment('local', 'testing')
-                        ? $e->getMessage()
-                        : 'A server error occurred.',
-                ], 500);
+                    'message' => 'CSRF token mismatch.',
+                ], 419);
+            }
+        });
+
+        // 429 - Too Many Requests
+        $exceptions->render(function (ThrottleRequestsException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                $headers = $e->getHeaders();
+                $retryAfter = (int) ($headers['Retry-After'] ?? 60);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => "Too many requests. Please try again in {$retryAfter} seconds.",
+                    'retry_after' => $retryAfter,
+                ], 429, $headers);
+            }
+        });
+
+        // 500 - Internal Server Error
+        $exceptions->render(function (Throwable $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                if ($e instanceof HttpExceptionInterface) {
+                    $status = $e->getStatusCode();
+                    $headers = $e->getHeaders();
+                } else {
+                    $status = 500;
+                    $headers = [];
+                }
+
+                $message = $status >= 500
+                    ? (app()->environment('local', 'testing') ? $e->getMessage() : 'A server error occurred.')
+                    : ($e->getMessage() ?: 'Request failed.');
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], $status, $headers);
             }
         });
     })->create();
