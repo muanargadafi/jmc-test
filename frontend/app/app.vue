@@ -7,11 +7,11 @@ useHead({
 </script>
 
 <template>
-  <UApp>
+  <div class="light" data-theme="light">
     <NuxtLoadingIndicator />
 
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-  </UApp>
+  </div>
 </template>

@@ -1,9 +1,5 @@
 <script setup>
-definePageMeta({
-  layout: 'auth',
-  title: 'Dashboard',
-  middleware: 'auth',
-})
+await navigateTo('/users')
 </script>
 
 <template>

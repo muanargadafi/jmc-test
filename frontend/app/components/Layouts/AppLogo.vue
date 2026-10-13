@@ -16,8 +16,16 @@ defineProps({
     <!-- JMC Wave Icon -->
     <div class="relative shrink-0 flex items-center justify-center">
       <img
+        v-if="variant === 'sidebar'"
+        src="~/assets/images/logo/logo_jmc.png"
+        alt="JMC Logo"
+        class="h-auto w-8 object-cover object-center"
+      />
+
+      <img
+        v-else
         src="~/assets/images/logo/logo_jmc_black.png"
-        alt="Warehouse Robotics"
+        alt="JMC Logo"
         class="h-7.5 w-auto object-cover object-center"
       />
     </div>
