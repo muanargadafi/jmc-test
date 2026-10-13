@@ -13,6 +13,17 @@ class Category extends Model
 {
     use HasFactory, UserStampsTrait;
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($model) {
+            if ($model->subCategories()->exists()) {
+                throw new \Exception(__("Sub Category already use, can't be deleted."));
+            }
+        });
+    }
+
     /**
      * Get the sub-categories for the category.
      *
