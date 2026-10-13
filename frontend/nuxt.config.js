@@ -17,8 +17,9 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'Aplikasi Pengelolaan Barang PT JMC Indonesia' },
       ],
-      link: [{ rel: 'icon', href: '/favicon.ico' }],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
     },
   },
 
@@ -28,6 +29,7 @@ export default defineNuxtConfig({
     public: {
       appName,
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || '',
+      apiPrefix: process.env.NUXT_PUBLIC_API_PREFIX || '',
     },
   },
 
@@ -41,10 +43,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2026-06-30',
 
-  typescript: {
-    strict: true,
-  },
-
   eslint: {
     config: {
       stylistic: {
@@ -52,5 +50,16 @@ export default defineNuxtConfig({
         braceStyle: '1tbs',
       },
     },
+  },
+
+  fonts: {
+    families: [
+      {
+        name: 'Inter',
+        provider: 'google',
+        weights: [300, 400, 500, 600, 700],
+        styles: ['normal'],
+      },
+    ],
   },
 })
