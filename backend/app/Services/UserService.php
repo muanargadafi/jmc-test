@@ -108,13 +108,11 @@ class UserService
     /**
      * Toggle the lock or status of a user by ID.
      *
-     * @param int $id
+     * @param User $user
      * @return User
      */
-    public function toggleLock(int $id): User
+    public function toggleLock(User $user): User
     {
-        $user = $this->userRepository->findById($id);
-
         return $this->userRepository->toggleLock($user);
     }
 }
