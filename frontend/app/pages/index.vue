@@ -1,5 +1,5 @@
 <script setup>
-await navigateTo('/users')
+await navigateTo('/incoming-goods')
 </script>
 
 <template>

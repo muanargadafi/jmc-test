@@ -9,6 +9,18 @@ defineProps({
 const emit = defineEmits(['close'])
 
 const route = useRoute()
+const { user } = useAuth()
+
+// --- abilities ---
+const abilities = computed(() => user.value?.abilities ?? [])
+
+function hasAbility(ability) {
+  return abilities.value.includes(ability)
+}
+
+const canViewBarangMasuk = computed(() => hasAbility('barang-masuk.manage'))
+const canViewMasterData = computed(() => hasAbility('master-data.manage'))
+const canViewUsers = computed(() => hasAbility('users.manage'))
 
 // Master data submenu open/close
 const isMasterDataOpen = ref(true)
@@ -54,6 +66,7 @@ const isManajemenUserActive = computed(() => {
     <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
       <!-- Barang Masuk -->
       <NuxtLink
+        v-if="canViewBarangMasuk"
         to="/incoming-goods"
         class="flex items-center gap-3 px-3.5 py-2.5 rounded text-xs font-medium transition-colors"
         :class="
@@ -68,7 +81,7 @@ const isManajemenUserActive = computed(() => {
       </NuxtLink>
 
       <!-- Master Data with Submenu -->
-      <div>
+      <div v-if="canViewMasterData">
         <button
           type="button"
           class="w-full flex items-center justify-between px-3.5 py-2.5 rounded text-xs font-medium transition-colors"
@@ -125,6 +138,7 @@ const isManajemenUserActive = computed(() => {
 
       <!-- Manajemen User -->
       <NuxtLink
+        v-if="canViewUsers"
         to="/users"
         class="flex items-center gap-3 px-3.5 py-2.5 rounded text-xs font-medium transition-colors"
         :class="
