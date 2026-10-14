@@ -29,13 +29,19 @@ class IncomingGoodRepository implements IncomingGoodRepositoryInterface
      */
     public function paginate(int $perPage, array $filters = []): LengthAwarePaginator
     {
-        $query = $this->model->newQuery()->with(['operator', 'subCategory']);
+        $query = $this->model->newQuery()->with(['items', 'operator', 'subCategory']);
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('origin', 'ilike', "%{$search}%")
                     ->orWhere('letter_number', 'ilike', "%{$search}%");
+            });
+        }
+
+        if (!empty($filters['category_id'])) {
+            $query->whereHas('subCategory', function ($q) use ($filters) {
+                $q->where('category_id', $filters['category_id']);
             });
         }
 
@@ -47,13 +53,10 @@ class IncomingGoodRepository implements IncomingGoodRepositoryInterface
             $query->where('operator_id', $filters['operator_id']);
         }
 
-        if (!empty($filters['received_date_from'])) {
-            $query->whereDate('received_date', '>=', $filters['received_date_from']);
+        if (!empty($filters['year'])) {
+            $query->whereYear('received_date', $filters['year']);
         }
 
-        if (!empty($filters['received_date_to'])) {
-            $query->whereDate('received_date', '<=', $filters['received_date_to']);
-        }
 
         if (isset($filters['is_verified']) && $filters['is_verified'] !== '') {
             $query->where('is_verified', filter_var($filters['is_verified'], FILTER_VALIDATE_BOOLEAN));

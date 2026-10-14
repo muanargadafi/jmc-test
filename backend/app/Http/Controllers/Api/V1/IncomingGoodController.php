@@ -41,10 +41,10 @@ class IncomingGoodController extends Controller
         $perPage = (int) $request->integer('limit', 10);
         $filters = $request->only([
             'search',
+            'category_id',
             'sub_category_id',
             'operator_id',
-            'received_date_from',
-            'received_date_to',
+            'year',
             'is_verified',
         ]);
 

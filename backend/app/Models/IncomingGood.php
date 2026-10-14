@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['operator_id', 'sub_category_id', 'received_date', 'origin', 'letter_number', 'attachment_path', 'attachment_name', 'total_price', 'created_by', 'updated_by'])]
+#[Fillable(['operator_id', 'sub_category_id', 'received_date', 'origin', 'letter_number', 'attachment_path', 'attachment_name', 'total_price', 'is_verified', 'verified_at', 'verified_by', 'created_by', 'updated_by'])]
 class IncomingGood extends Model
 {
     use HasFactory, UserStampsTrait;
