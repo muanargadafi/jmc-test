@@ -8,7 +8,7 @@ Aplikasi web modern untuk pengelolaan data inventaris dan transaksi barang masuk
 
 ## 1. Link Deployment (Live App)
 
-- **URL Aplikasi (Production)** : [https://jmc-test-vert.vercel.app](https://jmc-test-vert.vercel.app)
+- **URL Aplikasi (Production)** : [https://jmc-test-wplxt.sevalla.app](https://jmc-test-wplxt.sevalla.app)
 - **URL Backend API** : [https://jmc-test-15t3f.sevalla.app/](https://jmc-test-15t3f.sevalla.app/)
 
 ---
