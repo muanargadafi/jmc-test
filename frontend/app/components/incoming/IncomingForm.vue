@@ -17,12 +17,14 @@ const props = defineProps({
 const emit = defineEmits(['submit', 'back'])
 
 const { getSubCategoryOptions } = useSubCategories()
-const { getUsers } = useUsers()
+const { getUsers, getUserOptions } = useUsers()
 
-// operator options — ambil user dengan role operator
-const { users: operatorList } = getUsers({ limit: 100 })
+const { data: operatorList } = getUserOptions()
 const operatorOptions = computed(() =>
-  operatorList.value.map((u) => ({ label: u.name, value: u.id })),
+  (operatorList.value?.data ?? []).map((u) => ({
+    label: u.name,
+    value: u.id,
+  })),
 )
 
 // sub category options

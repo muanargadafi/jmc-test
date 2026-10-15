@@ -4,6 +4,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  isCollapsed: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['close'])
@@ -52,8 +56,11 @@ const isManajemenUserActive = computed(() => {
 
 <template>
   <aside
-    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#232d3d] text-slate-300 flex flex-col transition-transform duration-200 ease-in-out lg:translate-x-0"
-    :class="isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#232d3d] text-slate-300 flex flex-col transition-transform duration-200 ease-in-out"
+    :class="[
+      isOpen ? 'translate-x-0' : '-translate-x-full',
+      isCollapsed ? 'lg:-translate-x-full' : 'lg:translate-x-0',
+    ]"
   >
     <!-- Brand / Logo Header -->
     <div class="h-16 flex items-center px-5 border-b border-[#2d3a4d]/60 shrink-0">

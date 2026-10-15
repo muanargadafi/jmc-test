@@ -74,6 +74,10 @@ export const useUsers = () => {
     }
   }
 
+  const getUserOptions = () => {
+    return useApiFetch(`${USER_PREFIX}/options`)
+  }
+
   const getUserById = (id) => {
     return useApiFetch(() => `${USER_PREFIX}/${toValue(id)}`)
   }
@@ -106,6 +110,7 @@ export const useUsers = () => {
 
   return {
     getUsers,
+    getUserOptions,
     getUserById,
     createUser,
     updateUser,
