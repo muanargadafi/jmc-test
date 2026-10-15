@@ -41,7 +41,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             });
         }
 
-        return $query->latest()->paginate($perPage);
+        return $query->latest('id')->paginate($perPage);
     }
 
     /**

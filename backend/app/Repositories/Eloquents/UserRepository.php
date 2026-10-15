@@ -43,7 +43,7 @@ class UserRepository implements UserRepositoryInterface
             $query->where('role_id', $filters['role_id']);
         }
 
-        return $query->latest()->paginate($perPage);
+        return $query->latest('id')->paginate($perPage);
     }
 
     /**

@@ -1,0 +1,16 @@
+id,role_id,name,username,email,password
+1,1,Super Admin,admin,admin@gmail.com,Admin@12345
+2,1,Ahmad Fauzi,ahmad.fauzi,ahmad.fauzi@gmail.com,Admin@12345
+3,1,Siti Nurhaliza,siti.nurhaliza,siti.nurhaliza@gmail.com,Admin@12345
+4,1,Budi Santoso,budi.santoso,budi.santoso@gmail.com,Admin@12345
+5,1,Dewi Lestari,dewi.lestari,dewi.lestari@gmail.com,Admin@12345
+6,2,Eko Prasetyo,eko.prasetyo,eko.prasetyo@gmail.com,Admin@12345
+7,2,Rina Wulandari,rina.wulandari,rina.wulandari@gmail.com,Admin@12345
+8,2,Dimas Saputra,dimas.saputra,dimas.saputra@gmail.com,Admin@12345
+9,2,Anisa Rahmawati,anisa.rahmawati,anisa.rahmawati@gmail.com,Admin@12345
+10,2,Rizky Pratama,rizky.pratama,rizky.pratama@gmail.com,Admin@12345
+11,2,Sri Wahyuni,sri.wahyuni,sri.wahyuni@gmail.com,Admin@12345
+12,2,Fajar Hidayat,fajar.hidayat,fajar.hidayat@gmail.com,Admin@12345
+13,2,Maya Putri,maya.putri,maya.putri@gmail.com,Admin@12345
+14,2,Hendra Kurniawan,hendra.kurniawan,hendra.kurniawan@gmail.com,Admin@12345
+15,2,Dian Permata,dian.permata,dian.permata@gmail.com,Admin@12345

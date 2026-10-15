@@ -62,7 +62,7 @@ class IncomingGoodRepository implements IncomingGoodRepositoryInterface
             $query->where('is_verified', filter_var($filters['is_verified'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        return $query->latest()->paginate($perPage);
+        return $query->latest('id')->paginate($perPage);
     }
 
     /**

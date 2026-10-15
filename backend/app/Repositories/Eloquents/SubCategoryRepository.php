@@ -44,7 +44,7 @@ class SubCategoryRepository implements SubCategoryRepositoryInterface
 
         }
 
-        return $query->latest()->paginate($perPage);
+        return $query->latest('id')->paginate($perPage);
     }
 
     /**
