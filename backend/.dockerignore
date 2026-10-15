@@ -1,0 +1,42 @@
+# Git
+.git
+.github
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules
+vendor
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build & Tests
+tests
+phpunit.xml
+compose.yaml
+
+# Storage & Cache (jangan salin session/cache lokal)
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+!storage/logs/.gitkeep
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep
+
+# IDE & Editor files
+.editorconfig
+.gitattributes
+.gitignore
+.npmrc
+AGENTS.md
+CLAUDE.md
+README.md
+
+# Docker
+Dockerfile
+.dockerignore
