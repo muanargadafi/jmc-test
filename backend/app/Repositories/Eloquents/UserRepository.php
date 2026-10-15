@@ -2,8 +2,10 @@
 
 namespace App\Repositories\Eloquents;
 
+use App\Enums\RoleNameEnum;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -44,6 +46,17 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return $query->latest('id')->paginate($perPage);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function options(): Collection
+    {
+        return $this->model->newQuery()
+            ->whereHas('role', fn($query) => $query->where('code', RoleNameEnum::OPERATOR->value))
+            ->orderBy('name')
+            ->get(['id', 'username', 'name']);
     }
 
     /**

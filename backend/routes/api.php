@@ -52,6 +52,7 @@ Route::prefix('v1')->group(function () {
     */
     Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::middleware('role:' . RoleNameEnum::ADMIN->value . ',' . RoleNameEnum::OPERATOR->value)->group(function () {
+            Route::get('users/options', [UserController::class, 'options']);
             Route::get('categories/options', [CategoryController::class, 'options']);
             Route::get('sub-categories/options', [SubCategoryController::class, 'options']);
         });

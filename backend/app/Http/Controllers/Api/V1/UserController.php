@@ -56,6 +56,19 @@ class UserController extends Controller
     }
 
     /**
+     * Get all user options for dropdown selections.
+     *
+     * @return JsonResponse
+     */
+    public function options(): JsonResponse
+    {
+        return $this->successResponse(
+            data: UserResource::collection($this->userService->options())->resolve(),
+            message: 'User options retrieved successfully.'
+        );
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param StoreUserRequest $request

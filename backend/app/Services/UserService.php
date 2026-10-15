@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -37,6 +38,16 @@ class UserService
     public function paginate(int $perPage = 10, array $filters = []): LengthAwarePaginator
     {
         return $this->userRepository->paginate($perPage, $filters);
+    }
+
+    /**
+     * Get all user options for dropdown selections.
+     *
+     * @return Collection<int, User>
+     */
+    public function options(): Collection
+    {
+        return $this->userRepository->options();
     }
 
     /**

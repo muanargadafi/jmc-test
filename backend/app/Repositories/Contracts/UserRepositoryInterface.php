@@ -3,6 +3,7 @@
 namespace App\Repositories\Contracts;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -22,6 +23,14 @@ interface UserRepositoryInterface
      * @return LengthAwarePaginator<int, User>
      */
     public function paginate(int $perPage, array $filters = []): LengthAwarePaginator;
+
+    /**
+     * Get all user options (id, username, name) for dropdown menus.
+     *
+     * @return Collection<int, User>
+     */
+    public function options(): Collection;
+
 
     /**
      * Find a user record by its primary key ID.
