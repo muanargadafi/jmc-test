@@ -3,7 +3,7 @@ import { createUserSchema, updateUserSchema } from '~/utils/schemas/user.schema'
 
 definePageMeta({
   layout: 'default',
-  title: 'User',
+  title: 'Manajemen User',
   middleware: 'auth',
 })
 
@@ -18,7 +18,7 @@ const roleList = [
 ]
 
 const roleOptions = [
-  { label: 'All Roles', value: null },
+  { label: 'Semua Roles', value: null },
   ...roleList.map((r) => ({ label: r.nama, value: r.id })),
 ]
 
@@ -27,7 +27,6 @@ const formRoleOptions = roleList.map((r) => ({ label: r.nama, value: r.id }))
 // --- getUsers ---
 const { users, meta, loading, refresh, page, limit, search, roleId } = getUsers()
 
-// fix: null so it doesn't show 0 in USelect filter
 const filterRoleId = computed({
   get: () => roleId.value || null,
   set: (val) => {
@@ -41,19 +40,19 @@ const pageSize = limit.value
 const columns = [
   {
     id: 'no',
-    header: 'No',
+    header: 'NO',
     cell: ({ row }) => {
       const idx = users.value.findIndex((r) => r.id === row.original.id)
       return (page.value - 1) * pageSize + idx + 1
     },
   },
-  { id: 'action', header: 'Action' },
-  { accessorKey: 'username', header: 'Username' },
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'email', header: 'Email' },
+  { id: 'action', header: 'ACTION' },
+  { accessorKey: 'username', header: 'USERNAME' },
+  { accessorKey: 'name', header: 'NAMA' },
+  { accessorKey: 'email', header: 'EMAIL' },
   {
     id: 'role',
-    header: 'Role',
+    header: 'ROLE',
     cell: ({ row }) => row.original.role?.name ?? '-',
   },
 ]
@@ -277,7 +276,7 @@ async function handleToggleLock(row) {
     </div>
 
     <!-- Modal -->
-    <UModal v-model:open="isOpen" :title="isEdit ? 'Edit User' : 'Form'">
+    <UModal v-model:open="isOpen" :title="isEdit ? 'Edit User' : 'Tambah User'">
       <template #body>
         <div class="space-y-4">
           <UFormField label="Role" required :error="formErrors.role_id">
@@ -312,7 +311,7 @@ async function handleToggleLock(row) {
       </template>
 
       <template #footer>
-        <div class="flex justify-end gap-2">
+        <div class="w-full flex items-center justify-end gap-2">
           <UButton
             label="Close"
             color="neutral"
@@ -327,6 +326,7 @@ async function handleToggleLock(row) {
             variant="solid"
             class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#38789a] hover:bg-[#2c6582] text-white text-xs font-semibold transition-colors shadow-xs"
             :loading="submitLoading"
+            :disabled="submitLoading"
             @click="handleSubmit"
           />
         </div>

@@ -6,7 +6,7 @@ import {
 
 definePageMeta({
   layout: 'default',
-  title: 'Sub Categories',
+  title: 'Sub Kategori',
   middleware: 'auth',
 })
 
@@ -31,22 +31,22 @@ const formatRupiah = (val) => new Intl.NumberFormat('id-ID', { style: 'decimal' 
 const columns = [
   {
     id: 'no',
-    header: 'No',
+    header: 'NO',
     cell: ({ row }) => {
       const idx = subCategories.value.findIndex((r) => r.id === row.original.id)
       return (page.value - 1) * pageSize + idx + 1
     },
   },
-  { id: 'action', header: 'Action' },
+  { id: 'action', header: 'ACTION' },
   {
     id: 'category',
-    header: 'Item Category',
+    header: 'KATEGORI BARANG',
     cell: ({ row }) => row.original.category?.name ?? '-',
   },
-  { accessorKey: 'name', header: 'Item Sub Category' },
+  { accessorKey: 'name', header: 'SUB KATEGORI BARANG' },
   {
     id: 'price_limit',
-    header: 'Price Limit (Rp)',
+    header: 'BATAS HARGA (RP)',
     cell: ({ row }) => formatRupiah(row.original.price_limit),
   },
 ]
@@ -218,7 +218,7 @@ async function handleDelete(id) {
     </div>
 
     <!-- Modal -->
-    <UModal v-model:open="isOpen" :title="isEdit ? 'Edit Sub Kategori' : 'Form'">
+    <UModal v-model:open="isOpen" :title="isEdit ? 'Edit Sub Kategori' : 'Tmabah Sub Kategori'">
       <template #body>
         <div class="space-y-4">
           <UFormField label="Kategori" required :error="formErrors.category_id">
@@ -240,14 +240,17 @@ async function handleDelete(id) {
               type="number"
               min="0"
               placeholder="0"
-              class="w-full"
+              class="w-1/2 text-right"
+              :ui="{
+                base: 'text-right [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none',
+              }"
             />
           </UFormField>
         </div>
       </template>
 
       <template #footer>
-        <div class="flex justify-end gap-2">
+        <div class="w-full flex items-center justify-end gap-2">
           <UButton
             label="Close"
             color="neutral"
@@ -262,6 +265,7 @@ async function handleDelete(id) {
             variant="solid"
             class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#38789a] hover:bg-[#2c6582] text-white text-xs font-semibold transition-colors shadow-xs"
             :loading="submitLoading"
+            :disabled="submitLoading"
             @click="handleSubmit"
           />
         </div>

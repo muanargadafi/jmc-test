@@ -94,7 +94,11 @@ const handleSubmit = async () => {
             <UButton
               type="submit"
               label="MASUK"
+              color="neutral"
+              variant="solid"
               class="w-full py-2.5 px-4 bg-[#38789a] hover:bg-[#2c6582] text-white text-xs font-bold rounded tracking-wider uppercase transition-colors shadow-xs justify-center cursor-pointer"
+              :loading="isLoading"
+              :disabled="isLoading"
             />
           </div>
         </UForm>

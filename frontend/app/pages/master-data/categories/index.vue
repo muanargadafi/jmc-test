@@ -3,7 +3,7 @@ import { createCategorySchema, updateCategorySchema } from '~/utils/schemas/cate
 
 definePageMeta({
   layout: 'default',
-  title: 'Categories',
+  title: 'Kategori',
   middleware: 'auth',
 })
 
@@ -17,15 +17,15 @@ const pageSize = limit.value
 const columns = [
   {
     id: 'no',
-    header: 'No',
+    header: 'NO',
     cell: ({ row }) => {
       const idx = categories.value.findIndex((r) => r.id === row.original.id)
       return (page.value - 1) * pageSize + idx + 1
     },
   },
-  { id: 'action', header: 'Action' },
-  { accessorKey: 'code', header: 'Code' },
-  { accessorKey: 'name', header: 'Category Name' },
+  { id: 'action', header: 'ACTION' },
+  { accessorKey: 'code', header: 'KODE' },
+  { accessorKey: 'name', header: 'NAMA KATEGORI' },
 ]
 
 // --- alert ---
@@ -187,11 +187,11 @@ async function handleDelete(id) {
     </div>
 
     <!-- Modal -->
-    <UModal v-model:open="isOpen" :title="isEdit ? 'Edit Kategori' : 'Form'">
+    <UModal v-model:open="isOpen" :title="isEdit ? 'Edit Kategori' : 'Tambah Kategori'">
       <template #body>
         <div class="space-y-4">
-          <UFormField label="Kode" required :error="formErrors.code">
-            <UInput v-model="form.code" placeholder="Kode kategori" class="w-full" />
+          <UFormField label="Kode Kategori" required :error="formErrors.code">
+            <UInput v-model="form.code" placeholder="Kode kategori" class="w-1/3" />
           </UFormField>
 
           <UFormField label="Nama Kategori" required :error="formErrors.name">
@@ -201,7 +201,7 @@ async function handleDelete(id) {
       </template>
 
       <template #footer>
-        <div class="flex justify-end gap-2">
+        <div class="w-full flex items-center justify-end gap-2">
           <UButton
             label="Close"
             color="neutral"
@@ -216,6 +216,7 @@ async function handleDelete(id) {
             variant="solid"
             class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#38789a] hover:bg-[#2c6582] text-white text-xs font-semibold transition-colors shadow-xs"
             :loading="submitLoading"
+            :disabled="submitLoading"
             @click="handleSubmit"
           />
         </div>

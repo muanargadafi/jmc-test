@@ -29,7 +29,7 @@ const {
 // category options for filter
 const { data: catData } = getCategoryOptions()
 const categoryOptions = computed(() => [
-  { label: 'All Categories', value: null },
+  { label: 'Semua Kategori', value: null },
   ...(catData.value?.data ?? []).map((c) => ({ label: c.name, value: c.id })),
 ])
 
@@ -43,7 +43,7 @@ const filterCategoryId = computed({
 // sub category options for filter
 const { data: subCatData } = getSubCategoryOptions()
 const subCategoryOptions = computed(() => [
-  { label: 'All Sub Categories', value: null },
+  { label: 'Semua Sub Kategori', value: null },
   ...(subCatData.value?.data ?? []).map((s) => ({ label: s.name, value: s.id })),
 ])
 
@@ -57,7 +57,7 @@ const filterSubCategoryId = computed({
 // year options for filter
 const currentYear = new Date().getFullYear()
 const yearOptions = computed(() => [
-  { label: 'All Years', value: null },
+  { label: 'Semua Tahun', value: null },
   ...Array.from({ length: 6 }, (_, i) => {
     const y = currentYear - i
     return { label: String(y), value: y }
@@ -229,7 +229,7 @@ async function handleVerify(id) {
       <div class="flex items-center gap-2 flex-wrap">
         <USelect v-model="filterCategoryId" :items="categoryOptions" class="w-44" />
         <USelect v-model="filterSubCategoryId" :items="subCategoryOptions" class="w-48" />
-        <USelect v-model="filterYear" :items="yearOptions" class="w-32" placeholder="Tahun" />
+        <USelect v-model="filterYear" :items="yearOptions" class="w-40" placeholder="Tahun" />
         <UInput v-model="search" placeholder="Cari data..." icon="i-lucide-search" class="w-52" />
       </div>
     </div>

@@ -241,7 +241,19 @@ function handleSubmit() {
                 <th class="pb-2 pr-2 font-medium">Satuan</th>
                 <th class="pb-2 pr-2 font-medium">Total</th>
                 <th class="pb-2 pr-2 font-medium">Tgl. Expired</th>
-                <th class="pb-2 font-medium"></th>
+                <th class="pb-2 font-medium">
+                  <UButton
+                    icon="i-lucide-plus"
+                    color="neutral"
+                    variant="outline"
+                    size="xs"
+                    class="size-6 flex justify-center items-center rounded-full"
+                    @click="addItem"
+                    :ui="{
+                      leadingIcon: 'size-3.5',
+                    }"
+                  />
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -252,12 +264,12 @@ function handleSubmit() {
               >
                 <td class="py-2 pr-2">
                   <UFormField :error="errors[`items.${index}.name`]">
-                    <UInput v-model="item.name" placeholder="Nama barang" class="w-36" />
+                    <UInput v-model="item.name" placeholder="Nama barang" class="w-full" />
                   </UFormField>
                 </td>
                 <td class="py-2 pr-2">
                   <UFormField :error="errors[`items.${index}.price`]">
-                    <UInput v-model="item.price" type="number" min="0" class="w-28">
+                    <UInput v-model="item.price" type="number" min="0" class="w-full">
                       <template #trailing>
                         <span class="text-xs text-gray-400">Rp.</span>
                       </template>
@@ -277,11 +289,11 @@ function handleSubmit() {
                 </td>
                 <td class="py-2 pr-2">
                   <UFormField :error="errors[`items.${index}.unit`]">
-                    <UInput v-model="item.unit" placeholder="Buah" class="w-20" />
+                    <UInput v-model="item.unit" placeholder="Buah" class="w-full" />
                   </UFormField>
                 </td>
                 <td class="py-2 pr-2">
-                  <UInput :value="formatRupiah(itemTotal(item))" disabled class="w-28">
+                  <UInput :value="formatRupiah(itemTotal(item))" disabled class="w-full">
                     <template #trailing>
                       <span class="text-xs text-gray-400">Rp.</span>
                     </template>
@@ -289,43 +301,25 @@ function handleSubmit() {
                 </td>
                 <td class="py-2 pr-2">
                   <UFormField :error="errors[`items.${index}.expired_date`]">
-                    <UInput v-model="item.expired_date" type="date" class="w-36" />
+                    <UInput v-model="item.expired_date" type="date" class="w-full" />
                   </UFormField>
                 </td>
-                <td class="py-2">
-                  <UButton
-                    icon="i-lucide-plus"
-                    color="neutral"
-                    variant="ghost"
-                    size="xs"
-                    @click="addItem"
-                  />
+                <td class="py-2 flex items-center">
                   <UButton
                     v-if="form.items.length > 1"
-                    icon="i-lucide-trash-2"
+                    icon="i-lucide-x"
                     color="error"
-                    variant="ghost"
+                    variant="solid"
                     size="xs"
+                    class="size-6 flex justify-center items-center rounded-full"
                     @click="removeItem(index)"
+                    :ui="{
+                      leadingIcon: 'size-3.5',
+                    }"
                   />
                 </td>
               </tr>
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="4" class="pt-3 text-right text-sm font-semibold text-gray-600 pr-2">
-                  Grand Total
-                </td>
-                <td class="pt-3 pr-2">
-                  <UInput :value="formatRupiah(grandTotal)" disabled class="w-28">
-                    <template #trailing>
-                      <span class="text-xs text-gray-400">Rp.</span>
-                    </template>
-                  </UInput>
-                </td>
-                <td colspan="2" />
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
