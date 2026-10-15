@@ -23,6 +23,7 @@ export const useUsers = () => {
       const activeSearch = debouncedSearch.value ? debouncedSearch.value.trim() : undefined
 
       return {
+        page: page.value,
         limit: limit.value,
         ...(activeSearch ? { search: activeSearch } : {}),
         ...(roleId.value ? { role_id: roleId.value } : {}),

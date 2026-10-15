@@ -20,7 +20,9 @@ export const useCategories = () => {
 
     const query = computed(() => {
       const activeSearch = debouncedSearch.value ? debouncedSearch.value.trim() : undefined
+
       return {
+        page: page.value,
         limit: limit.value,
         ...(activeSearch ? { search: activeSearch } : {}),
       }
